@@ -1,0 +1,47 @@
+name: Update lottery data
+
+on:
+  # Every Sunday at 10:00 UTC (draws happen Saturday evening Hungarian time)
+  schedule:
+    - cron: "0 10 * * 0"
+
+  # Also allow a manual trigger from the Actions tab on GitHub
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # needed to commit & push
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Fetch latest draw data & regenerate App.jsx
+        run: python scripts/update_data.py
+
+      - name: Check whether App.jsx actually changed
+        id: diff
+        run: |
+          git diff --quiet src/App.jsx \
+            && echo "changed=false" >> $GITHUB_OUTPUT \
+            || echo "changed=true"  >> $GITHUB_OUTPUT
+
+      - name: Commit and push updated data
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/App.jsx
+          git commit -m "data: update lottery draws $(date -u '+%Y-%m-%d')"
+          git push
+
+      - name: Skip — no new draws
+        if: steps.diff.outputs.changed == 'false'
+        run: echo "No new draws since last run — nothing to commit."
