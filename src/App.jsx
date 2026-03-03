@@ -111,6 +111,7 @@ export default function App() {
     <div style={{ minHeight:"100vh", background:bg, color:textMain, fontFamily:sans, transition:"background 0.35s,color 0.35s", WebkitFontSmoothing:"antialiased" }}>
       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
       <style>{`
+        html,body{margin:0;padding:0;}
         input[type=range]{-webkit-appearance:none;appearance:none;outline:none;background:transparent;width:100%;cursor:pointer;}
         input[type=range]::-webkit-slider-runnable-track{height:2px;border-radius:1px;background:${dark?"rgba(255,255,255,0.15)":"rgba(0,0,0,0.12)"};}
         input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:${accent};margin-top:-6px;cursor:pointer;}
@@ -118,25 +119,26 @@ export default function App() {
         input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:${accent};border:none;cursor:pointer;}
       `}</style>
 
-      <div style={{ maxWidth:"920px", margin:"0 auto", padding:"52px 24px 72px", position:"relative" }}>
+      <div style={{ maxWidth:"920px", margin:"0 auto", padding:"16px 16px 72px" }}>
 
         {/* Mode toggle */}
-        <button onClick={() => setDark(!dark)} aria-label="Toggle mode" style={{
-          position:"absolute", top:"52px", right:"24px",
-          width:"44px", height:"24px", borderRadius:"12px",
-          border:`1px solid ${border}`,
-          background: dark ? "#222" : "#ddd",
-          cursor:"pointer", padding:0, display:"flex", alignItems:"center", transition:"background 0.3s",
-        }}>
-          <div style={{
-            width:"18px", height:"18px", borderRadius:"50%",
-            background: dark ? "#fff" : "#333",
-            transform: dark ? "translateX(3px)" : "translateX(22px)",
-            transition:"transform 0.3s,background 0.3s",
-            display:"flex", alignItems:"center", justifyContent:"center",
-            fontSize:"9px", lineHeight:1,
-          }}>{dark ? "☽" : "○"}</div>
-        </button>
+        <div style={{ display:"flex", justifyContent:"flex-end", marginBottom:"20px" }}>
+          <button onClick={() => setDark(!dark)} aria-label="Toggle mode" style={{
+            width:"44px", height:"24px", borderRadius:"12px",
+            border:`1px solid ${border}`,
+            background: dark ? "#222" : "#ddd",
+            cursor:"pointer", padding:0, display:"flex", alignItems:"center", transition:"background 0.3s",
+          }}>
+            <div style={{
+              width:"18px", height:"18px", borderRadius:"50%",
+              background: dark ? "#fff" : "#333",
+              transform: dark ? "translateX(3px)" : "translateX(22px)",
+              transition:"transform 0.3s,background 0.3s",
+              display:"flex", alignItems:"center", justifyContent:"center",
+              fontSize:"9px", lineHeight:1,
+            }}>{dark ? "☽" : "○"}</div>
+          </button>
+        </div>
 
         {/* Header */}
         <div style={{ textAlign:"center", marginBottom:"44px" }}>
