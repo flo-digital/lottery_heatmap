@@ -222,28 +222,6 @@ export default function App() {
           </div>
         </div>
 
-        {/* Hot / Cold */}
-        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"12px", marginBottom:"12px" }}>
-          {[{label:"Legtöbbször kihúzott", nums:hotNums, sym:"↑"},{label:"Legritkábban kihúzott", nums:coldNums, sym:"↓"}].map(({label,nums,sym}) => (
-            <div key={label} style={{ background:bgCard, border:`1px solid ${border}`, borderRadius:"14px", padding:"18px 20px" }}>
-              <div style={{ fontSize:"10px", fontWeight:500, letterSpacing:"0.12em", color:textMuted, marginBottom:"14px", textTransform:"uppercase" }}>
-                {sym} {label}
-              </div>
-              <div style={{ display:"flex", gap:"10px", flexWrap:"wrap" }}>
-                {nums.map(n => {
-                  const t = norm(n);
-                  return (
-                    <div key={n} style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:"5px" }}>
-                      <div style={{ width:"34px", height:"34px", borderRadius:"50%", background:monoColor(t,dark), display:"flex", alignItems:"center", justifyContent:"center", fontSize:"11px", fontWeight:600, fontVariantNumeric:"tabular-nums", color:labelColor(t,dark), boxShadow:"0 1px 6px rgba(0,0,0,0.2)" }}>{n}</div>
-                      <span style={{ fontSize:"11px", color:textStat, fontWeight:500, fontVariantNumeric:"tabular-nums" }}>{freq[n]}×</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
-        </div>
-
         {/* Detail */}
         <div style={{ background:bgCard, border:`1px solid ${border}`, borderRadius:"14px", padding:"20px 24px", minHeight:"78px", transition:"opacity 0.2s", opacity: active ? 1 : 0.3, marginBottom:"12px" }}>
           {active ? (() => {
@@ -277,6 +255,28 @@ export default function App() {
               Vidd az egeret egy számra · Kattintás a rögzítéshez
             </div>
           )}
+        </div>
+
+        {/* Hot / Cold */}
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"12px", marginBottom:"12px" }}>
+          {[{label:"Legtöbbször kihúzott", nums:hotNums, sym:"↑"},{label:"Legritkábban kihúzott", nums:coldNums, sym:"↓"}].map(({label,nums,sym}) => (
+            <div key={label} style={{ background:bgCard, border:`1px solid ${border}`, borderRadius:"14px", padding:"18px 20px" }}>
+              <div style={{ fontSize:"10px", fontWeight:500, letterSpacing:"0.12em", color:textMuted, marginBottom:"14px", textTransform:"uppercase" }}>
+                {sym} {label}
+              </div>
+              <div style={{ display:"flex", gap:"10px", flexWrap:"wrap" }}>
+                {nums.map(n => {
+                  const t = norm(n);
+                  return (
+                    <div key={n} style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:"5px" }}>
+                      <div style={{ width:"34px", height:"34px", borderRadius:"50%", background:monoColor(t,dark), display:"flex", alignItems:"center", justifyContent:"center", fontSize:"11px", fontWeight:600, fontVariantNumeric:"tabular-nums", color:labelColor(t,dark), boxShadow:"0 1px 6px rgba(0,0,0,0.2)" }}>{n}</div>
+                      <span style={{ fontSize:"11px", color:textStat, fontWeight:500, fontVariantNumeric:"tabular-nums" }}>{freq[n]}×</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* Jackpots section */}
