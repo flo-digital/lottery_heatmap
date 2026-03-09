@@ -143,27 +143,8 @@ export default function App() {
 
       <div style={{ maxWidth:"920px", margin:"0 auto", padding:"16px 16px 72px" }}>
 
-        {/* Mode toggle */}
-        <div style={{ display:"flex", justifyContent:"flex-end", marginBottom:"20px" }}>
-          <button onClick={() => setDark(!dark)} aria-label="Toggle mode" style={{
-            width:"44px", height:"24px", borderRadius:"12px",
-            border:`1px solid ${border}`,
-            background: dark ? "#222" : "#ddd",
-            cursor:"pointer", padding:0, display:"flex", alignItems:"center", transition:"background 0.3s",
-          }}>
-            <div style={{
-              width:"18px", height:"18px", borderRadius:"50%",
-              background: dark ? "#fff" : "#333",
-              transform: dark ? "translateX(3px)" : "translateX(22px)",
-              transition:"transform 0.3s,background 0.3s",
-              display:"flex", alignItems:"center", justifyContent:"center",
-              fontSize:"9px", lineHeight:1,
-            }}>{dark ? "☽" : "○"}</div>
-          </button>
-        </div>
-
-        {/* Tab switcher — pill style with logos */}
-        <div style={{ display:"flex", justifyContent:"center", marginBottom:"28px" }}>
+        {/* Top bar: tab switcher left, mode toggle right */}
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"32px" }}>
           <div style={{
             display:"inline-flex",
             background: dark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.06)",
@@ -172,8 +153,8 @@ export default function App() {
             padding:"4px",
           }}>
             {[
-              { id:"otos",  logo: `${import.meta.env.BASE_URL}otoslotto.png`,  alt:"Ötöslottó", tintBg:"rgba(45,120,45,0.22)",  tintGlow:"rgba(45,120,45,0.35)"  },
-              { id:"hatos", logo: `${import.meta.env.BASE_URL}hatoslotto.png`, alt:"Hatoslottó", tintBg:"rgba(160,30,30,0.22)",   tintGlow:"rgba(160,30,30,0.35)"  },
+              { id:"otos",  logo: `${import.meta.env.BASE_URL}otoslotto.png`,  alt:"Ötöslottó", tintBg:"rgba(45,120,45,0.22)"  },
+              { id:"hatos", logo: `${import.meta.env.BASE_URL}hatoslotto.png`, alt:"Hatoslottó", tintBg:"rgba(160,30,30,0.22)"  },
             ].map(tab => {
               const isActive = activeGame === tab.id;
               return (
@@ -193,13 +174,31 @@ export default function App() {
               );
             })}
           </div>
+
+          <button onClick={() => setDark(!dark)} aria-label="Toggle mode" style={{
+            width:"44px", height:"24px", borderRadius:"12px",
+            border:`1px solid ${border}`,
+            background: dark ? "#222" : "#ddd",
+            cursor:"pointer", padding:0, display:"flex", alignItems:"center", transition:"background 0.3s",
+          }}>
+            <div style={{
+              width:"18px", height:"18px", borderRadius:"50%",
+              background: dark ? "#fff" : "#333",
+              transform: dark ? "translateX(3px)" : "translateX(22px)",
+              transition:"transform 0.3s,background 0.3s",
+              display:"flex", alignItems:"center", justifyContent:"center",
+              fontSize:"9px", lineHeight:1,
+            }}>{dark ? "☽" : "○"}</div>
+          </button>
         </div>
 
         {/* Header */}
         <div style={{ textAlign:"center", marginBottom:"44px" }}>
-          <h1 style={{ fontSize:"clamp(28px,5vw,44px)", fontWeight:600, margin:"0 0 6px", lineHeight:1.1, letterSpacing:"-0.03em", color:textMain }}>
-            {gameTitle}
-          </h1>
+          <img
+            src={`${import.meta.env.BASE_URL}${isOtos ? "otoslotto" : "hatoslotto"}.png`}
+            alt={gameTitle}
+            style={{ height:"clamp(44px,8vw,72px)", display:"block", margin:"0 auto 10px" }}
+          />
           <div style={{ fontSize:"13px", color:textMuted, fontWeight:400 }}>
             {filtered.length} húzás · {rangeLabel}
           </div>
@@ -271,16 +270,22 @@ export default function App() {
                   </div>
                 )}
               </div>
-              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:"10px" }}>
-                {[
-                  { label:"Húzás nyertes nélkül", value: isWin ? "Ez volt az!" : String(drawsSinceJP >= 0 ? drawsSinceJP : "–") },
-                  { label:"Utolsó telitalálat",   value: lastJP ? (lastJP[1] ? lastJP[1].replace(/\.$/, "") : String(lastJP[0])) : "–" },
-                ].map(({label, value}) => (
-                  <div key={label} style={{ background:dark?"rgba(255,255,255,0.03)":"rgba(0,0,0,0.03)", borderRadius:"10px", padding:"12px 10px", textAlign:"center" }}>
-                    <div style={{ fontSize:"9px", fontWeight:500, letterSpacing:"0.10em", textTransform:"uppercase", color:textMuted, marginBottom:"6px" }}>{label}</div>
-                    <div style={{ fontSize:"16px", fontWeight:600, color:textStat, fontVariantNumeric:"tabular-nums" }}>{value}</div>
-                  </div>
-                ))}
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"10px" }}>
+                {(() => {
+                  const weeksSinceJP = drawsSinceJP >= 0 ? (isOtos ? drawsSinceJP : Math.round(drawsSinceJP / 2)) : null;
+                  const lastJPDate   = lastJP ? (lastJP[1] ? lastJP[1].replace(/\.$/, "") : String(lastJP[0])) : "–";
+                  return (
+                    <div style={{ background:dark?"rgba(255,255,255,0.03)":"rgba(0,0,0,0.03)", borderRadius:"10px", padding:"12px 10px", textAlign:"center" }}>
+                      <div style={{ fontSize:"9px", fontWeight:500, letterSpacing:"0.10em", textTransform:"uppercase", color:textMuted, marginBottom:"6px" }}>Utolsó telitalálat</div>
+                      <div style={{ fontSize:"20px", fontWeight:600, color:textStat, fontVariantNumeric:"tabular-nums", lineHeight:1.1 }}>
+                        {isWin ? "Ez volt az!" : weeksSinceJP !== null ? `${weeksSinceJP} hét` : "–"}
+                      </div>
+                      {!isWin && (
+                        <div style={{ fontSize:"11px", color:textMuted, marginTop:"5px", fontVariantNumeric:"tabular-nums" }}>{lastJPDate}</div>
+                      )}
+                    </div>
+                  );
+                })()}
                 {exactMatch ? (
                   <div style={{ background:dark?"rgba(255,215,0,0.08)":"rgba(200,150,0,0.08)", border:`1px solid ${dark?"rgba(255,215,0,0.25)":"rgba(180,130,0,0.25)"}`, borderRadius:"10px", padding:"12px 10px", textAlign:"center" }}>
                     <div style={{ fontSize:"9px", fontWeight:500, letterSpacing:"0.10em", textTransform:"uppercase", color:textMuted, marginBottom:"4px" }}>Volt már ilyen!</div>
