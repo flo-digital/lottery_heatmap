@@ -197,7 +197,7 @@ export default function App() {
           <img
             src={`${import.meta.env.BASE_URL}${isOtos ? "otoslotto" : "hatoslotto"}.png`}
             alt={gameTitle}
-            style={{ height:"clamp(44px,8vw,72px)", display:"block", margin:"0 auto 10px" }}
+            style={{ width:"clamp(140px,22vw,200px)", height:"clamp(44px,8vw,72px)", objectFit:"contain", display:"block", margin:"0 auto 10px" }}
           />
           <div style={{ fontSize:"13px", color:textMuted, fontWeight:400 }}>
             {filtered.length} húzás · {rangeLabel}
