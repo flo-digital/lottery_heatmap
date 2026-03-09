@@ -157,7 +157,7 @@ export default function App() {
           </button>
         </div>
 
-        {/* Tab switcher — pill style */}
+        {/* Tab switcher — pill style with logos */}
         <div style={{ display:"flex", justifyContent:"center", marginBottom:"28px" }}>
           <div style={{
             display:"inline-flex",
@@ -167,21 +167,22 @@ export default function App() {
             padding:"4px",
           }}>
             {[
-              { id:"otos",  label:"Ötöslottó (5/90)" },
-              { id:"hatos", label:"Hatoslottó (6/45)" },
+              { id:"otos",  logo: `${import.meta.env.BASE_URL}otoslotto.png`,  alt:"Ötöslottó" },
+              { id:"hatos", logo: `${import.meta.env.BASE_URL}hatoslotto.png`, alt:"Hatoslottó" },
             ].map(tab => {
               const isActive = activeGame === tab.id;
               return (
                 <button key={tab.id} onClick={() => switchGame(tab.id)} style={{
-                  padding:"7px 22px", borderRadius:"100px", border:"none",
-                  background: isActive ? (dark ? "#ffffff" : "#ffffff") : "transparent",
-                  color: isActive ? "#111111" : textMuted,
-                  fontSize:"13px", fontWeight: isActive ? 600 : 400,
-                  cursor:"pointer", fontFamily:sans,
-                  transition:"background 0.2s, color 0.2s, box-shadow 0.2s",
+                  padding:"6px 18px", borderRadius:"100px", border:"none",
+                  background: isActive ? "#ffffff" : "transparent",
+                  cursor:"pointer",
+                  transition:"background 0.2s, box-shadow 0.2s",
                   boxShadow: isActive ? "0 1px 8px rgba(0,0,0,0.18)" : "none",
-                  whiteSpace:"nowrap",
-                }}>{tab.label}</button>
+                  display:"flex", alignItems:"center", justifyContent:"center",
+                  opacity: isActive ? 1 : (dark ? 0.45 : 0.35),
+                }}>
+                  <img src={tab.logo} alt={tab.alt} style={{ height:"32px", display:"block" }} />
+                </button>
               );
             })}
           </div>
