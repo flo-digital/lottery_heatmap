@@ -194,11 +194,13 @@ export default function App() {
 
         {/* Header */}
         <div style={{ textAlign:"center", marginBottom:"44px" }}>
-          <img
-            src={`${import.meta.env.BASE_URL}${isOtos ? "otoslotto" : "hatoslotto"}.png`}
-            alt={gameTitle}
-            style={{ width:"clamp(140px,22vw,200px)", height:"clamp(44px,8vw,72px)", objectFit:"contain", display:"block", margin:"0 auto 10px" }}
-          />
+          <div style={{ height:"clamp(44px,8vw,72px)", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:"10px" }}>
+            <img
+              src={`${import.meta.env.BASE_URL}${isOtos ? "otoslotto" : "hatoslotto"}.png`}
+              alt={gameTitle}
+              style={{ width:"clamp(130px,20vw,190px)", height:"auto", display:"block" }}
+            />
+          </div>
           <div style={{ fontSize:"13px", color:textMuted, fontWeight:400 }}>
             {filtered.length} húzás · {rangeLabel}
           </div>
