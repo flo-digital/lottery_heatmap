@@ -215,7 +215,7 @@ export default function App() {
                   );
                   const exactMatch = past.find(r => [r[2],r[3],r[4],r[5],r[6]].every(n => latestSet.has(n)));
                   if (exactMatch) {
-                    const d = exactMatch[1] ? exactMatch[1].replace(/\.$/, "") : String(exactMatch[0]);
+                    const d = exactMatch[1] ? exactMatch[1].replace(/\.$/, "") : String(exactMatch[0]) + ". (nincs pontos dátum)";
                     return (
                       <div style={{ background:dark?"rgba(255,215,0,0.08)":"rgba(200,150,0,0.08)", border:`1px solid ${dark?"rgba(255,215,0,0.25)":"rgba(180,130,0,0.25)"}`, borderRadius:"10px", padding:"12px 10px", textAlign:"center" }}>
                         <div style={{ fontSize:"9px", fontWeight:500, letterSpacing:"0.10em", textTransform:"uppercase", color:textMuted, marginBottom:"4px" }}>Volt már ilyen!</div>
@@ -229,7 +229,8 @@ export default function App() {
                     const c = [r[2],r[3],r[4],r[5],r[6]].filter(n => latestSet.has(n)).length;
                     if (c > bestCount) { bestCount = c; bestDraw = r; }
                   });
-                  const bd = bestDraw && bestDraw[1] ? bestDraw[1].replace(/\.$/, "") : (bestDraw ? String(bestDraw[0]) : "–");
+                  const fmtDate = r => r[1] ? r[1].replace(/\.$/, "") : String(r[0]) + ". (nincs pontos dátum)";
+                  const bd = bestDraw ? fmtDate(bestDraw) : "–";
                   return (
                     <div style={{ background:dark?"rgba(255,255,255,0.03)":"rgba(0,0,0,0.03)", borderRadius:"10px", padding:"12px 10px", textAlign:"center" }}>
                       <div style={{ fontSize:"9px", fontWeight:500, letterSpacing:"0.10em", textTransform:"uppercase", color:textMuted, marginBottom:"4px" }}>Legjobb egyezés</div>
