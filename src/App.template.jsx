@@ -112,9 +112,12 @@ export default function App() {
     return `${oldestDate} – ${newestDate}`;
   }, [filtered, gameTotal]);
 
+  const gameTint  = isOtos ? "45,120,45" : "160,30,30";
   const bg        = dark ? "#0d0d0d" : "#f7f7f7";
-  const bgCard    = dark ? "#161616" : "#ffffff";
-  const border    = dark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.09)";
+  const bgCard    = dark
+    ? `linear-gradient(145deg, rgba(${gameTint},0.10), rgba(${gameTint},0.04)), #161616`
+    : `linear-gradient(145deg, rgba(${gameTint},0.06), rgba(${gameTint},0.02)), #ffffff`;
+  const border    = dark ? `rgba(${gameTint},0.22)` : `rgba(${gameTint},0.16)`;
   const textMain  = dark ? "#e8e8e8" : "#111111";
   const textMuted = dark ? "#888888" : "#666666";
   const textStat  = dark ? "#bbbbbb" : "#333333";
@@ -179,7 +182,7 @@ export default function App() {
                   background: isActive ? tab.tintBg : "transparent",
                   backdropFilter: isActive ? "blur(16px) saturate(180%)" : "none",
                   WebkitBackdropFilter: isActive ? "blur(16px) saturate(180%)" : "none",
-                  boxShadow: isActive ? `0 2px 16px ${tab.tintGlow}, inset 0 1px 0 rgba(255,255,255,0.15)` : "none",
+                  boxShadow: isActive ? "inset 0 1px 0 rgba(255,255,255,0.15)" : "none",
                   cursor:"pointer",
                   display:"flex", alignItems:"center", justifyContent:"center",
                   opacity: isActive ? 1 : (dark ? 0.4 : 0.3),
