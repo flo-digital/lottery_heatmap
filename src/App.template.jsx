@@ -157,21 +157,34 @@ export default function App() {
           </button>
         </div>
 
-        {/* Tab switcher */}
-        <div style={{ display:"flex", gap:"8px", justifyContent:"center", marginBottom:"28px" }}>
-          {[
-            { id:"otos",  label:"Ötöslottó (5/90)" },
-            { id:"hatos", label:"Hatoslottó (6/45)" },
-          ].map(tab => (
-            <button key={tab.id} onClick={() => switchGame(tab.id)} style={{
-              padding:"8px 20px", borderRadius:"22px",
-              border:`1px solid ${activeGame === tab.id ? accent : border}`,
-              background: activeGame === tab.id ? accent : "transparent",
-              color: activeGame === tab.id ? (dark ? "#000" : "#fff") : textMuted,
-              fontSize:"13px", fontWeight:500, cursor:"pointer", fontFamily:sans,
-              transition:"all 0.2s",
-            }}>{tab.label}</button>
-          ))}
+        {/* Tab switcher — pill style */}
+        <div style={{ display:"flex", justifyContent:"center", marginBottom:"28px" }}>
+          <div style={{
+            display:"inline-flex",
+            background: dark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.06)",
+            border:`1px solid ${border}`,
+            borderRadius:"100px",
+            padding:"4px",
+          }}>
+            {[
+              { id:"otos",  label:"Ötöslottó (5/90)" },
+              { id:"hatos", label:"Hatoslottó (6/45)" },
+            ].map(tab => {
+              const isActive = activeGame === tab.id;
+              return (
+                <button key={tab.id} onClick={() => switchGame(tab.id)} style={{
+                  padding:"7px 22px", borderRadius:"100px", border:"none",
+                  background: isActive ? (dark ? "#ffffff" : "#ffffff") : "transparent",
+                  color: isActive ? "#111111" : textMuted,
+                  fontSize:"13px", fontWeight: isActive ? 600 : 400,
+                  cursor:"pointer", fontFamily:sans,
+                  transition:"background 0.2s, color 0.2s, box-shadow 0.2s",
+                  boxShadow: isActive ? "0 1px 8px rgba(0,0,0,0.18)" : "none",
+                  whiteSpace:"nowrap",
+                }}>{tab.label}</button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Header */}
