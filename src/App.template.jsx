@@ -134,6 +134,8 @@ export default function App() {
         input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:${accent};margin-top:-6px;cursor:pointer;}
         input[type=range]::-moz-range-track{height:2px;border-radius:1px;background:${dark?"rgba(255,255,255,0.15)":"rgba(0,0,0,0.12)"};}
         input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:${accent};border:none;cursor:pointer;}
+        @keyframes tabFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+        .tab-content{animation:tabFadeIn 0.35s cubic-bezier(0.25,0.46,0.45,0.94);}
       `}</style>
 
       <div style={{ maxWidth:"920px", margin:"0 auto", padding:"16px 16px 72px" }}>
@@ -167,19 +169,21 @@ export default function App() {
             padding:"4px",
           }}>
             {[
-              { id:"otos",  logo: `${import.meta.env.BASE_URL}otoslotto.png`,  alt:"Ötöslottó" },
-              { id:"hatos", logo: `${import.meta.env.BASE_URL}hatoslotto.png`, alt:"Hatoslottó" },
+              { id:"otos",  logo: `${import.meta.env.BASE_URL}otoslotto.png`,  alt:"Ötöslottó", tintBg:"rgba(45,120,45,0.22)",  tintGlow:"rgba(45,120,45,0.35)"  },
+              { id:"hatos", logo: `${import.meta.env.BASE_URL}hatoslotto.png`, alt:"Hatoslottó", tintBg:"rgba(160,30,30,0.22)",   tintGlow:"rgba(160,30,30,0.35)"  },
             ].map(tab => {
               const isActive = activeGame === tab.id;
               return (
                 <button key={tab.id} onClick={() => switchGame(tab.id)} style={{
-                  padding:"6px 18px", borderRadius:"100px", border:"none",
-                  background: isActive ? "#ffffff" : "transparent",
+                  padding:"6px 20px", borderRadius:"100px", border:"none",
+                  background: isActive ? tab.tintBg : "transparent",
+                  backdropFilter: isActive ? "blur(16px) saturate(180%)" : "none",
+                  WebkitBackdropFilter: isActive ? "blur(16px) saturate(180%)" : "none",
+                  boxShadow: isActive ? `0 2px 16px ${tab.tintGlow}, inset 0 1px 0 rgba(255,255,255,0.15)` : "none",
                   cursor:"pointer",
-                  transition:"background 0.2s, box-shadow 0.2s",
-                  boxShadow: isActive ? "0 1px 8px rgba(0,0,0,0.18)" : "none",
                   display:"flex", alignItems:"center", justifyContent:"center",
-                  opacity: isActive ? 1 : (dark ? 0.45 : 0.35),
+                  opacity: isActive ? 1 : (dark ? 0.4 : 0.3),
+                  transition:"all 0.35s cubic-bezier(0.25,0.46,0.45,0.94)",
                 }}>
                   <img src={tab.logo} alt={tab.alt} style={{ height:"32px", display:"block" }} />
                 </button>
@@ -197,6 +201,8 @@ export default function App() {
             {filtered.length} húzás · {rangeLabel}
           </div>
         </div>
+
+        <div className="tab-content" key={activeGame}>
 
         {/* Latest Draw */}
         {(() => {
@@ -500,6 +506,8 @@ export default function App() {
         <div style={{ textAlign:"center", marginTop:"28px", fontSize:"10px", color:textFaint, fontWeight:400, letterSpacing:"0.14em", textTransform:"uppercase" }}>
           Valós adatok 1998–2026 · Szerencsejátékkal felelősséggel
         </div>
+
+        </div>{/* end tab-content */}
       </div>
     </div>
   );
