@@ -195,17 +195,30 @@ export default function App() {
                   </div>
                 ))}
                 {(() => {
-                  const lastSeenIdx = {};
-                  RAW.forEach((r, idx) => {
-                    [r[2],r[3],r[4],r[5],r[6]].forEach(n => { if (!(n in lastSeenIdx)) lastSeenIdx[n] = idx; });
+                  const latestSet = new Set([n1,n2,n3,n4,n5]);
+                  const past = RAW.slice(1);
+                  const exactMatch = past.find(r => [r[2],r[3],r[4],r[5],r[6]].every(n => latestSet.has(n)));
+                  if (exactMatch) {
+                    const d = exactMatch[1] ? exactMatch[1].replace(/\.$/, "") : String(exactMatch[0]);
+                    return (
+                      <div style={{ background:dark?"rgba(255,215,0,0.08)":"rgba(200,150,0,0.08)", border:`1px solid ${dark?"rgba(255,215,0,0.25)":"rgba(180,130,0,0.25)"}`, borderRadius:"10px", padding:"12px 10px", textAlign:"center" }}>
+                        <div style={{ fontSize:"9px", fontWeight:500, letterSpacing:"0.10em", textTransform:"uppercase", color:textMuted, marginBottom:"6px" }}>Volt már ilyen!</div>
+                        <div style={{ fontSize:"13px", fontWeight:600, color:dark?"#ffd700":"#8a6000", fontVariantNumeric:"tabular-nums" }}>{d}</div>
+                        <div style={{ fontSize:"10px", color:textMuted, marginTop:"3px" }}>azonos kombináció</div>
+                      </div>
+                    );
+                  }
+                  let bestDraw = null, bestCount = 0;
+                  past.forEach(r => {
+                    const c = [r[2],r[3],r[4],r[5],r[6]].filter(n => latestSet.has(n)).length;
+                    if (c > bestCount) { bestCount = c; bestDraw = r; }
                   });
-                  for (let i = 1; i <= 90; i++) if (!(i in lastSeenIdx)) lastSeenIdx[i] = RAW.length;
-                  const [coldNum, coldIdx] = Object.entries(lastSeenIdx).sort((a,b) => +b[1] - +a[1])[0];
+                  const bd = bestDraw && bestDraw[1] ? bestDraw[1].replace(/\.$/, "") : (bestDraw ? String(bestDraw[0]) : "–");
                   return (
                     <div style={{ background:dark?"rgba(255,255,255,0.03)":"rgba(0,0,0,0.03)", borderRadius:"10px", padding:"12px 10px", textAlign:"center" }}>
-                      <div style={{ fontSize:"9px", fontWeight:500, letterSpacing:"0.10em", textTransform:"uppercase", color:textMuted, marginBottom:"6px" }}>Leghidegebb szám</div>
-                      <div style={{ fontSize:"16px", fontWeight:600, color:textStat, fontVariantNumeric:"tabular-nums" }}>{coldNum}</div>
-                      <div style={{ fontSize:"10px", color:textMuted, marginTop:"3px" }}>{coldIdx} hete nem jött</div>
+                      <div style={{ fontSize:"9px", fontWeight:500, letterSpacing:"0.10em", textTransform:"uppercase", color:textMuted, marginBottom:"6px" }}>Legjobb egyezés</div>
+                      <div style={{ fontSize:"16px", fontWeight:600, color:textStat, fontVariantNumeric:"tabular-nums" }}>{bestCount} / 5</div>
+                      <div style={{ fontSize:"10px", color:textMuted, marginTop:"3px" }}>{bd}</div>
                     </div>
                   );
                 })()}
