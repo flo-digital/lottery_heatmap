@@ -148,6 +148,58 @@ export default function App() {
           </div>
         </div>
 
+
+        {/* Latest Draw */}
+        {(() => {
+          const latest = RAW[0];
+          const [,dateStr,n1,n2,n3,n4,n5] = latest;
+          const latestNums = [n1,n2,n3,n4,n5];
+          const lastJP = JACKPOTS[0];
+          const isWin = JACKPOTS.some(j => j[3]===n1&&j[4]===n2&&j[5]===n3&&j[6]===n4&&j[7]===n5);
+          const drawsSinceJP = RAW.findIndex(r => r[2]===lastJP[3]&&r[3]===lastJP[4]&&r[4]===lastJP[5]&&r[5]===lastJP[6]&&r[6]===lastJP[7]);
+          const totalWinners = JACKPOTS.reduce((s,j) => s+j[2], 0);
+          const dateDisplay = dateStr ? dateStr.replace(/\.$/,"") : String(latest[0]);
+          return (
+            <div style={{ background:bgCard, border:`1px solid ${border}`, borderRadius:"14px", padding:"20px 24px", marginBottom:"16px" }}>
+              <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"16px" }}>
+                <div style={{ fontSize:"10px", fontWeight:500, letterSpacing:"0.12em", textTransform:"uppercase", color:textMuted }}>Legutóbbi húzás</div>
+                <div style={{ fontSize:"11px", color:textMuted }}>{dateDisplay}</div>
+              </div>
+              <div style={{ display:"flex", gap:"10px", justifyContent:"center", marginBottom:"18px", flexWrap:"wrap" }}>
+                {latestNums.map(n => {
+                  const t = norm(n);
+                  return (
+                    <div key={n} style={{ width:"48px", height:"48px", borderRadius:"50%", background:monoColor(t,dark), display:"flex", alignItems:"center", justifyContent:"center", fontSize:"15px", fontWeight:600, color:labelColor(t,dark), boxShadow:"0 2px 10px rgba(0,0,0,0.25)", fontVariantNumeric:"tabular-nums" }}>{n}</div>
+                  );
+                })}
+              </div>
+              <div style={{ textAlign:"center", marginBottom:"18px" }}>
+                {isWin ? (
+                  <div style={{ display:"inline-flex", alignItems:"center", gap:"6px", background:dark?"rgba(255,215,0,0.12)":"rgba(200,150,0,0.12)", border:`1px solid ${dark?"rgba(255,215,0,0.35)":"rgba(180,130,0,0.35)"}`, borderRadius:"20px", padding:"6px 14px", fontSize:"12px", fontWeight:500, color:dark?"#ffd700":"#8a6000" }}>
+                    🏆 {lastJP[2]} főnyeremény-nyertes ezen a húzáson!
+                  </div>
+                ) : (
+                  <div style={{ display:"inline-flex", alignItems:"center", gap:"6px", background:dark?"rgba(255,255,255,0.04)":"rgba(0,0,0,0.04)", border:`1px solid ${border}`, borderRadius:"20px", padding:"6px 14px", fontSize:"12px", fontWeight:500, color:textMuted }}>
+                    ✗ Nem volt ötöslottó-nyertes
+                  </div>
+                )}
+              </div>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:"10px" }}>
+                {[
+                  { label:"Húzás nyertes nélkül", value: isWin ? "Ez volt az!" : `${drawsSinceJP}` },
+                  { label:"Utolsó főnyertes", value: lastJP[1] ? lastJP[1].replace(/\.$/, "") : String(lastJP[0]) },
+                  { label:"Összes főnyertes", value: `${totalWinners} fő` },
+                ].map(({label,value}) => (
+                  <div key={label} style={{ background:dark?"rgba(255,255,255,0.03)":"rgba(0,0,0,0.03)", borderRadius:"10px", padding:"12px 10px", textAlign:"center" }}>
+                    <div style={{ fontSize:"9px", fontWeight:500, letterSpacing:"0.10em", textTransform:"uppercase", color:textMuted, marginBottom:"6px" }}>{label}</div>
+                    <div style={{ fontSize:"16px", fontWeight:600, color:textStat, fontVariantNumeric:"tabular-nums" }}>{value}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
+
         {/* Draw count slider */}
         <div style={{ background:bgCard, border:`1px solid ${border}`, borderRadius:"14px", padding:"20px 24px", marginBottom:"16px" }}>
           <div style={{ fontSize:"10px", fontWeight:500, letterSpacing:"0.12em", textTransform:"uppercase", color:textMuted, marginBottom:"16px" }}>
