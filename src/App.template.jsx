@@ -180,21 +180,35 @@ export default function App() {
                   </div>
                 ) : (
                   <div style={{ display:"inline-flex", alignItems:"center", gap:"6px", background:dark?"rgba(255,255,255,0.04)":"rgba(0,0,0,0.04)", border:`1px solid ${border}`, borderRadius:"20px", padding:"6px 14px", fontSize:"12px", fontWeight:500, color:textMuted }}>
-                    ✗ Nem volt ötöslottó-nyertes
+                    ✗ Nincs telitalálatos szelvény
                   </div>
                 )}
               </div>
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:"10px" }}>
                 {[
                   { label:"Húzás nyertes nélkül", value: isWin ? "Ez volt az!" : `${drawsSinceJP}` },
-                  { label:"Utolsó főnyertes", value: lastJP[1] ? lastJP[1].replace(/\.$/, "") : String(lastJP[0]) },
-                  { label:"Összes főnyertes", value: `${totalWinners} fő` },
+                  { label:"Utolsó telitalálat", value: lastJP[1] ? lastJP[1].replace(/\.$/, "") : String(lastJP[0]) },
                 ].map(({label,value}) => (
                   <div key={label} style={{ background:dark?"rgba(255,255,255,0.03)":"rgba(0,0,0,0.03)", borderRadius:"10px", padding:"12px 10px", textAlign:"center" }}>
                     <div style={{ fontSize:"9px", fontWeight:500, letterSpacing:"0.10em", textTransform:"uppercase", color:textMuted, marginBottom:"6px" }}>{label}</div>
                     <div style={{ fontSize:"16px", fontWeight:600, color:textStat, fontVariantNumeric:"tabular-nums" }}>{value}</div>
                   </div>
                 ))}
+                {(() => {
+                  const lastSeenIdx = {};
+                  RAW.forEach((r, idx) => {
+                    [r[2],r[3],r[4],r[5],r[6]].forEach(n => { if (!(n in lastSeenIdx)) lastSeenIdx[n] = idx; });
+                  });
+                  for (let i = 1; i <= 90; i++) if (!(i in lastSeenIdx)) lastSeenIdx[i] = RAW.length;
+                  const [coldNum, coldIdx] = Object.entries(lastSeenIdx).sort((a,b) => +b[1] - +a[1])[0];
+                  return (
+                    <div style={{ background:dark?"rgba(255,255,255,0.03)":"rgba(0,0,0,0.03)", borderRadius:"10px", padding:"12px 10px", textAlign:"center" }}>
+                      <div style={{ fontSize:"9px", fontWeight:500, letterSpacing:"0.10em", textTransform:"uppercase", color:textMuted, marginBottom:"6px" }}>Leghidegebb szám</div>
+                      <div style={{ fontSize:"16px", fontWeight:600, color:textStat, fontVariantNumeric:"tabular-nums" }}>{coldNum}</div>
+                      <div style={{ fontSize:"10px", color:textMuted, marginTop:"3px" }}>{coldIdx} hete nem jött</div>
+                    </div>
+                  );
+                })()}
               </div>
             </div>
           );
