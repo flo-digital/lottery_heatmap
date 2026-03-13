@@ -12,8 +12,8 @@ jobs:
   update:
     runs-on: ubuntu-latest
     permissions:
-      contents: write   # needed to commit & push
-      actions: write    # needed to trigger deploy workflow
+      contents: write
+      actions: write
 
     steps:
       - name: Checkout repository
@@ -30,7 +30,11 @@ jobs:
       - name: Check whether App.jsx actually changed
         id: diff
         run: |
-          git diff --quiet src/App.jsx             && echo "changed=false" >>              || echo "changed=true"  >> 
+          if git diff --quiet src/App.jsx; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
 
       - name: Commit and push updated data
         if: steps.diff.outputs.changed == 'true'
@@ -44,9 +48,13 @@ jobs:
       - name: Trigger deploy
         if: steps.diff.outputs.changed == 'true'
         run: |
-          curl -s -X POST             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}"             -H "Accept: application/vnd.github+json"             "https://api.github.com/repos/${{ github.repository }}/actions/workflows/deploy.yml/dispatches"             -d '{"ref":"main"}'
+          curl -s -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/deploy.yml/dispatches" \
+            -d '{"ref":"main"}'
           echo "Deploy workflow triggered."
 
-      - name: Skip — no new draws
+      - name: Skip - no new draws
         if: steps.diff.outputs.changed == 'false'
         run: echo "No new draws since last run — nothing to commit."
