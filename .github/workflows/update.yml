@@ -1,9 +1,9 @@
 name: Update lottery data
 
 on:
-  # Every Sunday at 10:00 UTC (draws happen Saturday evening Hungarian time)
+  # Every day at 08:00 UTC — checks both CSVs, only commits & deploys if new draws are found
   schedule:
-    - cron: "0 10 * * 0"
+    - cron: "0 8 * * *"
 
   # Also allow a manual trigger from the Actions tab on GitHub
   workflow_dispatch:
@@ -30,9 +30,7 @@ jobs:
       - name: Check whether App.jsx actually changed
         id: diff
         run: |
-          git diff --quiet src/App.jsx \
-            && echo "changed=false" >> $GITHUB_OUTPUT \
-            || echo "changed=true"  >> $GITHUB_OUTPUT
+          git diff --quiet src/App.jsx             && echo "changed=false" >>              || echo "changed=true"  >> 
 
       - name: Commit and push updated data
         if: steps.diff.outputs.changed == 'true'
@@ -46,11 +44,7 @@ jobs:
       - name: Trigger deploy
         if: steps.diff.outputs.changed == 'true'
         run: |
-          curl -s -X POST \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/deploy.yml/dispatches" \
-            -d '{"ref":"main"}'
+          curl -s -X POST             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}"             -H "Accept: application/vnd.github+json"             "https://api.github.com/repos/${{ github.repository }}/actions/workflows/deploy.yml/dispatches"             -d '{"ref":"main"}'
           echo "Deploy workflow triggered."
 
       - name: Skip — no new draws
